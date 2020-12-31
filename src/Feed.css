@@ -41,3 +41,8 @@
     display: flex;
     justify-content: space-evenly;
 }
+
+.post__button {
+    display: flex;
+    justify-content: space-evenly;
+}
