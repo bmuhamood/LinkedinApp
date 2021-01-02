@@ -16,7 +16,7 @@ function Feed() {
     const [posts, setPosts] = useState([]);
     
     useEffect(() => {
-        db.collection("posts").onSnapshot((snapshot) => 
+        db.collection("posts").orderBy('timestamp', 'desc').onSnapshot((snapshot) => 
             setPosts(
                 snapshot.docs.map((doc) => ({
                     id: doc.id,
@@ -29,13 +29,15 @@ function Feed() {
     const sendPost = (e) => {
         e.preventDefault();
 
-        db.collection('posts').add({
+        db.collection("posts").add({
             name: "Bbosa Muhamood", 
             description: "this is a test post",
             message: input, 
-            photoUrl: '',
+            photoUrl: "",
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        })
+        });
+
+        setInput("");
     };
 
     return ( 
@@ -44,8 +46,13 @@ function Feed() {
                 <div className="feed__input">
                 <CreateIcon />
                 <form>
-                    <input value={input} onChange={e => setInput(e.target.value)} type="text"/>
-                    <button onClicktype={sendPost}>Send</button>
+                    <input 
+                    value={input} 
+                    onChange={(e) => setInput(e.target.value)} 
+                    type="text"/>
+                    <button onClick={sendPost} type="submit">
+                      Send
+                    </button>
                 </form>
                 </div>
                 <div className="feed__inputOptions">
@@ -57,17 +64,18 @@ function Feed() {
             </div>
 
             {/* Posts */}
-            {posts.map(({ id, data: { name, description, message, photoUrl } }) => (
-            <Post />
+            {posts.map(({ id, data: { name, description, message, 
+            photoUrl } }) => (
+            <Post
+            key={id}
+            name={name}
+            description={description}
+            message={message}
+            photoUrl={photoUrl}
+            />
             ))}
-
-
-            <Post 
-            name="Bbosa Muhamood" 
-            description="This is a test" 
-            message="WOW, this worked"/>
         </div>
-    )
+    );
 }
 
-export default Feed
+export default Feed;
